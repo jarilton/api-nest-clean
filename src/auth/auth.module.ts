@@ -1,26 +1,33 @@
 import { Module } from '@nestjs/common';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { Env } from 'src/env';
 
 @Module({
   imports: [
-    PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
-      global: true,
-      useFactory(config: ConfigService<Env, true>) {
-        const privateKey = config.get('JWT_PRIVATE_KEY', { infer: true });
-        const publicKey = config.get('JWT_PUBLIC_KEY', { infer: true });
+      useFactory: async (
+        configService: ConfigService<Env>,
+      ): Promise<JwtModuleOptions> => {
+        const privateKey = configService.get<string>('JWT_PRIVATE_KEY');
+
+        if (!privateKey) {
+          throw new Error('Chave privada JWT não encontrada.');
+        }
+
+        const ecPrivateKey = Buffer.from(privateKey, 'base64');
 
         return {
-          signOptions: { algorithm: 'RS256' },
-          privateKey: Buffer.from(privateKey, 'base64'),
-          publicKey: Buffer.from(publicKey, 'base64'),
+          privateKey: ecPrivateKey,
+          signOptions: {
+            algorithm: 'ES256',
+            keyid: '1',
+          },
         };
       },
     }),
   ],
+  exports: [JwtModule],
 })
 export class AuthModule {}
