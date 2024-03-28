@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "name": "Jamal",
-    "email": "jamal@gmail.com",
+    "email": "jamal2@gmail.com",
     "password": "123456"
 }
 
@@ -17,7 +17,7 @@ Post {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-    "email": "jamal@gmail.com",
+    "email": "jamal2@gmail.com",
     "password": "123456"
 }
 
