@@ -1,4 +1,5 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('/questions')
@@ -7,7 +8,9 @@ export class CreateQuestionController {
   constructor() {}
 
   @Post()
-  async handle() {
+  async handle(@Req() req: Request) {
+    console.log(req.body);
+
     return 'ok';
   }
 }
