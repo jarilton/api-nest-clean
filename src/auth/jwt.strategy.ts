@@ -9,21 +9,20 @@ const tokenSchema = z.object({
   sub: z.string().uuid(),
 });
 
-type TokenPayload = z.infer<typeof tokenSchema>;
+export type UserPayload = z.infer<typeof tokenSchema>;
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService<Env, true>) {
-    const privateKey = config.get('JWT_PRIVATE_KEY');
+    const publicKey = config.get('JWT_PUBLIC_KEY');
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: privateKey,
-      algorithms: ['ES256'],
+      secretOrKey: publicKey,
     });
   }
 
-  async validate(payload: TokenPayload) {
+  async validate(payload: UserPayload) {
     return tokenSchema.parse(payload);
   }
 }

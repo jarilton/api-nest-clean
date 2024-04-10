@@ -39,7 +39,11 @@ export class AuthenticateController {
         throw new UnauthorizedException('User credentials do not match.');
       }
 
-      const isPasswordValid = password === user.password;
+      const isPasswordValid = user.password === password;
+
+      console.log('password', password);
+      console.log('ser.password', user.password);
+      console.log('isPasswordValid', isPasswordValid);
 
       if (!isPasswordValid) {
         throw new UnauthorizedException('User credentials do not match.');
